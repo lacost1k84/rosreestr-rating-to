@@ -110,7 +110,7 @@ button,input,select{font:inherit}
 .legend-swatch.low{background:#ffd8d8}
 .legend-swatch.dim{background:#edf1f6}
 .hex-map-scroll{overflow:auto;padding-bottom:4px}
-.hex-map{position:relative;min-width:1980px;background:radial-gradient(circle at 20% 20%, rgba(11,90,166,.04), transparent 30%), radial-gradient(circle at 80% 70%, rgba(6,63,121,.05), transparent 28%)}
+.hex-map{position:relative;background:radial-gradient(circle at 20% 20%, rgba(11,90,166,.04), transparent 30%), radial-gradient(circle at 80% 70%, rgba(6,63,121,.05), transparent 28%)}
 .hex-cell{position:absolute;width:84px;height:74px;clip-path:polygon(25% 5%,75% 5%,100% 50%,75% 95%,25% 95%,0 50%);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px 6px;color:#14324f;border:1px solid rgba(20,45,78,.12);box-shadow:0 6px 16px rgba(20,45,78,.08);cursor:pointer;transition:transform .18s ease, box-shadow .18s ease, opacity .18s ease;user-select:none}
 .hex-cell:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(20,45,78,.16)}
 .hex-cell.dim{opacity:.26}
@@ -125,6 +125,18 @@ button,input,select{font:inherit}
 .map-mini-card strong{display:block;font-size:24px;margin-top:6px}
 .map-mini-card span{font-size:12px;color:var(--muted)}
 
+
+.map-controls{display:grid;gap:10px;justify-items:end}
+.segmented{display:inline-flex;padding:4px;border:1px solid var(--line);background:#fff;border-radius:12px;box-shadow:0 4px 14px rgba(20,45,78,.04)}
+.segment-btn{border:0;background:transparent;color:var(--muted);padding:8px 12px;border-radius:9px;font-weight:800;cursor:pointer;font-size:12px}
+.segment-btn.active{background:var(--navy);color:#fff}
+.map-panel{overflow:hidden}
+.hex-map-scroll{width:100%;overflow:hidden;padding-bottom:4px}
+.hex-map-scroll.detail-mode{overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch}
+.hex-map-stage{position:relative;margin:0 auto;transition:width .2s ease,height .2s ease}
+.hex-map{position:relative;background:radial-gradient(circle at 20% 20%, rgba(11,90,166,.04), transparent 30%), radial-gradient(circle at 80% 70%, rgba(6,63,121,.05), transparent 28%);transition:transform .2s ease}
+.fit-mode .hex-cell{pointer-events:auto}
+.map-mobile-hint{margin-top:10px;padding:10px 12px;border-radius:11px;background:#f6f9fc;border:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.4}
 
 .insight-list{display:grid;gap:10px}
 .insight-item{padding:13px 14px;border:1px solid var(--line);border-radius:13px;background:#fff;line-height:1.45;font-size:13px}
@@ -197,9 +209,26 @@ button,input,select{font:inherit}
   .diag-item strong{font-size:21px}
   .data-table{font-size:12px;min-width:720px}
   .data-table th,.data-table td{padding:9px 10px}
+
+  .map-section-head{gap:10px}
+  .map-controls{justify-items:start;width:100%}
+  .segmented{width:100%}
+  .segment-btn{flex:1}
+  .legend-inline{gap:8px 12px}
+  .legend-item{font-size:11px}
+  .map-panel-title{display:grid;gap:8px}
+  .fit-mode .hex-cell.compact-text,.fit-mode .hex-cell{box-shadow:none}
+  .fit-mode .compact-text .hex-cell-value,.fit-mode .compact-text .hex-cell-rank{display:none}
+  .fit-mode .compact-text .hex-cell-label{font-size:14px}
+  .detail-mode .hex-map{min-width:1980px}
+  .detail-mode .hex-cell{width:84px;height:74px;padding:8px 6px}
+  .detail-mode .hex-cell-label{font-size:13px}
+  .detail-mode .hex-cell-value{font-size:12px}
+  .detail-mode .hex-cell-rank{font-size:10px}
+  .map-side-grid{grid-template-columns:1fr 1fr;gap:8px}
 }
 
-.hex-map{min-width:1620px}.hex-cell{width:74px;height:66px;padding:6px 4px}.hex-cell-label{font-size:11px}.hex-cell-value{font-size:10px}.hex-cell-rank{font-size:9px}.map-side-grid{grid-template-columns:1fr 1fr;gap:8px}
+
 
 @media(max-width:560px){
   .sidebar{padding-top:12px}
@@ -226,7 +255,9 @@ button,input,select{font:inherit}
   .region-hero{grid-template-columns:1fr}
   .hero-rank{text-align:left}
   .diag-grid{grid-template-columns:1fr 1fr}
+  .fit-mode .compact-text .hex-cell-label{display:none}
 }
+
 
 @media(max-width:380px){
   .map-side-grid{grid-template-columns:1fr}

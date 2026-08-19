@@ -17,7 +17,7 @@ const DIRECTIONS = [
 ];
 const SHORT = ['Качество ЕГРН','Эл.услуги','Контроль','Цифра','Кадры','ФЭД','Дисциплина','Антикор','Открытость','Развитие','Право','ППК'];
 const HEX_LAYOUT = {"Калининградская область": [0, 3, "КЛГ"], "Мурманская область": [4, 0, "МУР"], "Архангельская область и Ненецкий АО": [7, 1, "АРХ"], "Республика Карелия": [4, 1, "КАР"], "Санкт-Петербург": [3, 2, "СПБ"], "Ленинградская область": [4, 2, "ЛЕН"], "Псковская область": [2, 3, "ПСК"], "Новгородская область": [4, 3, "НВГ"], "Вологодская область": [6, 2, "ВЛГ"], "Республика Коми": [8, 2, "КОМ"], "Тверская область": [5, 4, "ТВР"], "Смоленская область": [3, 4, "СМЛ"], "Брянская область": [2, 5, "БРЯ"], "Калужская область": [4, 5, "КЛЖ"], "Москва": [6, 5, "МСК"], "Московская область": [5, 5, "МО"], "Ярославская область": [6, 4, "ЯРС"], "Костромская область": [7, 4, "КСТ"], "Ивановская область": [7, 5, "ИВН"], "Владимирская область": [8, 5, "ВЛД"], "Орловская область": [4, 6, "ОРЛ"], "Тульская область": [5, 6, "ТУЛ"], "Рязанская область": [7, 6, "РЯЗ"], "Белгородская область": [2, 7, "БЕЛ"], "Курская область": [3, 7, "КУР"], "Липецкая область": [5, 7, "ЛПЦ"], "Тамбовская область": [7, 7, "ТАМ"], "Воронежская область": [4, 8, "ВРН"], "Республика Крым": [1, 10, "КРМ"], "Севастополь": [2, 10, "СЕВ"], "Ростовская область": [4, 10, "РСТ"], "Республика Адыгея": [3, 11, "АДГ"], "Краснодарский край": [4, 11, "КРД"], "Карачаево-Черкесская Республика": [5, 11, "КЧР"], "Ставропольский край": [6, 11, "СТВ"], "Кабардино-Балкарская Республика": [5, 12, "КБР"], "Республика Северная Осетия": [6, 12, "РСО"], "Республика Ингушетия": [7, 12, "ИНГ"], "Чеченская Республика": [8, 12, "ЧЕЧ"], "Республика Дагестан": [9, 12, "ДАГ"], "Республика Калмыкия": [7, 10, "КЛМ"], "Астраханская область": [8, 9, "АСТ"], "Волгоградская область": [7, 9, "ВГД"], "Республика Мордовия": [9, 6, "МОР"], "Нижегородская область": [10, 5, "НН"], "Чувашская Республика": [10, 6, "ЧУВ"], "Республика Марий Эл": [11, 5, "МАР"], "Кировская область": [10, 4, "КИР"], "Пензенская область": [10, 7, "ПНЗ"], "Ульяновская область": [11, 7, "УЛЬ"], "Республика Татарстан": [12, 6, "ТАТ"], "Самарская область": [13, 7, "САМ"], "Саратовская область": [14, 8, "САР"], "Оренбургская область": [14, 7, "ОРБ"], "Удмуртская Республика": [12, 5, "УДМ"], "Пермский край": [12, 4, "ПЕР"], "Республика Башкортостан": [13, 5, "БШК"], "Курганская область": [14, 4, "КРГ"], "Челябинская область": [14, 5, "ЧЛБ"], "Свердловская область": [13, 4, "СВР"], "Тюменская область": [15, 3, "ТЮМ"], "Ханты-Мансийский АО": [15, 2, "ХМ"], "Ямало-Ненецкий АО": [15, 1, "ЯН"], "Омская область": [16, 4, "ОМС"], "Томская область": [17, 3, "ТОМ"], "Новосибирская область": [17, 4, "НСК"], "Кемеровская область": [18, 4, "КЕМ"], "Алтайский край": [18, 5, "АЛК"], "Республика Алтай": [17, 6, "АЛТ"], "Республика Хакасия": [19, 5, "ХАК"], "Красноярский край": [18, 2, "КРЯ"], "Республика Тыва": [19, 6, "ТЫВ"], "Иркутская область": [20, 4, "ИРК"], "Республика Бурятия": [21, 5, "БУР"], "Забайкальский край": [22, 5, "ЗАБ"], "Республика Саха (Якутия)": [22, 2, "ЯКТ"], "Амурская область": [23, 5, "АМР"], "Еврейская А.обл.": [24, 5, "ЕАО"], "Хабаровский край": [24, 4, "ХБР"], "Приморский край": [24, 6, "ПРМ"], "Сахалинская область": [25, 7, "СХЛ"], "Камчатский край": [26, 3, "КМЧ"], "Магаданская область и Чукотский АО": [26, 1, "МГД"]};
-const state = { data: Array.isArray(window.DEFAULT_DATA) ? window.DEFAULT_DATA : [], meta: window.DEFAULT_META || {}, view:'overview', direction:0, region:null, metric:'to', charts:[] };
+const state = { data: Array.isArray(window.DEFAULT_DATA) ? window.DEFAULT_DATA : [], meta: window.DEFAULT_META || {}, view:'overview', direction:0, region:null, metric:'to', mapMode:'fit', charts:[] };
 
 const $ = s => document.querySelector(s);
 const $$ = s => Array.from(document.querySelectorAll(s));
@@ -103,17 +103,81 @@ function renderMap(data){
   const all = state.data.filter(x=>HEX_LAYOUT[x.n]);
   const maxCol = Math.max(...Object.values(HEX_LAYOUT).map(v=>v[0]));
   const maxRow = Math.max(...Object.values(HEX_LAYOUT).map(v=>v[1]));
-  const cellW = 84, stepX = 73, stepY = 63, offsetX = 36;
-  const width = maxCol * stepX + cellW + offsetX + 24;
-  const height = maxRow * stepY + 86;
+
+  // Базовая геометрия карты. В режиме «Вся Россия» она масштабируется целиком,
+  // в режиме «Подробно» отображается в натуральном размере с прокруткой.
+  const cellW = 84, cellH = 74, stepX = 73, stepY = 63, offsetX = 36;
+  const naturalWidth = maxCol * stepX + cellW + offsetX + 24;
+  const naturalHeight = maxRow * stepY + cellH + 24;
+
   const high = data.filter(x=>getScale(x)==='Высокая').length;
   const mid = data.filter(x=>getScale(x)==='Средняя').length;
   const low = data.filter(x=>getScale(x)==='Низкая').length;
   const leader = [...data].filter(x=>num(getRank(x))).sort((a,b)=>getRank(a)-getRank(b))[0];
-  root.innerHTML = `<div class="section-head"><div><h2>Карта России сотами</h2><p>Условная сотовая картограмма регионов. Цвет показывает уровень оценки в режиме <strong>${metricLabel()}</strong>. Нажмите на соту, чтобы открыть карточку региона.</p></div><div class="legend-inline"><span class="legend-item"><i class="legend-swatch high"></i>Высокая</span><span class="legend-item"><i class="legend-swatch mid"></i>Средняя</span><span class="legend-item"><i class="legend-swatch low"></i>Низкая</span><span class="legend-item"><i class="legend-swatch dim"></i>Вне текущего фильтра</span></div></div>
-  <div class="panel"><div class="panel-title"><div><h3>Сотовая карта по всем территориальным органам</h3><p>Расположение условное, адаптировано для обзорной аналитики и сравнения регионов.</p></div><div class="note">Сейчас в фильтре: <strong>${data.length}</strong> регионов</div></div><div class="hex-map-scroll"><div class="hex-map" style="width:${width}px;height:${height}px">${all.map(x=>{ const [c,r,label]=HEX_LAYOUT[x.n]; const cls = getScale(x)==='Высокая' ? 'high' : getScale(x)==='Средняя' ? 'mid' : 'low'; const dim = selected.has(x.n) ? '' : ' dim'; const left = c*stepX + (r%2?offsetX:0); const top = r*stepY; return `<button type="button" class="hex-cell ${cls}${dim}" data-region="${esc(x.n)}" style="left:${left}px;top:${top}px" title="${esc(x.n)} · ${pct(getVal(x))} · место ${rank(getRank(x))}"><span class="hex-cell-label">${esc(label)}</span><span class="hex-cell-value">${pct(getVal(x))}</span><span class="hex-cell-rank">место ${rank(getRank(x))}</span></button>`;}).join('')}</div></div></div>
-  <div class="grid-2 equal"><div class="panel"><div class="panel-title"><div><h3>Сводка по текущему фильтру</h3><p>${metricLabel()}</p></div></div><div class="map-side-grid"><div class="map-mini-card"><span>Высокая оценка</span><strong>${high}</strong></div><div class="map-mini-card"><span>Средняя оценка</span><strong>${mid}</strong></div><div class="map-mini-card"><span>Низкая оценка</span><strong>${low}</strong></div></div></div><div class="panel"><div class="panel-title"><div><h3>Лидер на карте</h3><p>Лучший результат по текущему режиму</p></div></div><div class="note"><strong>${leader?esc(leader.n):'Нет данных'}</strong><br>Федеральный округ: ${leader?esc(leader.fo):'—'}<br>Значение: ${leader?pct(getVal(leader)):'—'}<br>Место в рейтинге: ${leader?rank(getRank(leader)):'—'}<br><br>Подсказка: используйте общие фильтры сверху — карта сразу перекрасится и покажет только нужную выборку без потери общего контура России.</div></div></div>`;
-  $$('#mapDashboard .hex-cell').forEach(btn=>btn.addEventListener('click',()=>{ state.region = btn.dataset.region; setView('region'); }));
+  const mobile = window.matchMedia('(max-width: 700px)').matches;
+  const compactText = state.mapMode==='fit' && mobile;
+
+  const cells = all.map(x=>{
+    const [c,r,label]=HEX_LAYOUT[x.n];
+    const cls = getScale(x)==='Высокая' ? 'high' : getScale(x)==='Средняя' ? 'mid' : 'low';
+    const dim = selected.has(x.n) ? '' : ' dim';
+    const left = c*stepX + (r%2?offsetX:0);
+    const top = r*stepY;
+    return `<button type="button" class="hex-cell ${cls}${dim}" data-region="${esc(x.n)}" style="left:${left}px;top:${top}px" aria-label="${esc(x.n)}, ${pct(getVal(x))}, место ${rank(getRank(x))}" title="${esc(x.n)} · ${pct(getVal(x))} · место ${rank(getRank(x))}">
+      <span class="hex-cell-label">${esc(label)}</span>
+      <span class="hex-cell-value">${pct(getVal(x))}</span>
+      <span class="hex-cell-rank">место ${rank(getRank(x))}</span>
+    </button>`;
+  }).join('');
+
+  root.innerHTML = `
+    <div class="section-head map-section-head">
+      <div><h2>Карта России сотами</h2><p>Условная сотовая картограмма регионов. Цвет показывает уровень оценки в режиме <strong>${metricLabel()}</strong>.</p></div>
+      <div class="map-controls">
+        <div class="segmented" role="group" aria-label="Режим карты">
+          <button type="button" class="segment-btn ${state.mapMode==='fit'?'active':''}" data-map-mode="fit">Вся Россия</button>
+          <button type="button" class="segment-btn ${state.mapMode==='detail'?'active':''}" data-map-mode="detail">Подробно</button>
+        </div>
+        <div class="legend-inline"><span class="legend-item"><i class="legend-swatch high"></i>Высокая</span><span class="legend-item"><i class="legend-swatch mid"></i>Средняя</span><span class="legend-item"><i class="legend-swatch low"></i>Низкая</span><span class="legend-item"><i class="legend-swatch dim"></i>Вне фильтра</span></div>
+      </div>
+    </div>
+    <div class="panel map-panel">
+      <div class="panel-title map-panel-title"><div><h3>${state.mapMode==='fit'?'Вся Россия на одном экране':'Подробная сотовая карта'}</h3><p>${state.mapMode==='fit'?'Обзорная карта автоматически подстраивается под ширину экрана.':'Крупные соты с процентом и местом. Карту можно прокручивать по горизонтали.'}</p></div><div class="note">В фильтре: <strong>${data.length}</strong> регионов</div></div>
+      <div class="hex-map-scroll ${state.mapMode==='detail'?'detail-mode':'fit-mode'}">
+        <div class="hex-map-stage" style="--map-natural-width:${naturalWidth}px;--map-natural-height:${naturalHeight}px">
+          <div class="hex-map ${compactText?'compact-text':''}" style="width:${naturalWidth}px;height:${naturalHeight}px">${cells}</div>
+        </div>
+      </div>
+      ${state.mapMode==='fit' && mobile ? '<div class="map-mobile-hint">На телефоне в режиме «Вся Россия» подписи сокращены, чтобы видеть весь контур. Для чтения процентов и мест переключитесь на «Подробно».</div>' : ''}
+    </div>
+    <div class="grid-2 equal">
+      <div class="panel"><div class="panel-title"><div><h3>Сводка по текущему фильтру</h3><p>${metricLabel()}</p></div></div><div class="map-side-grid"><div class="map-mini-card"><span>Высокая оценка</span><strong>${high}</strong></div><div class="map-mini-card"><span>Средняя оценка</span><strong>${mid}</strong></div><div class="map-mini-card"><span>Низкая оценка</span><strong>${low}</strong></div></div></div>
+      <div class="panel"><div class="panel-title"><div><h3>Лидер на карте</h3><p>Лучший результат по текущему режиму</p></div></div><div class="note"><strong>${leader?esc(leader.n):'Нет данных'}</strong><br>Федеральный округ: ${leader?esc(leader.fo):'—'}<br>Значение: ${leader?pct(getVal(leader)):'—'}<br>Место в рейтинге: ${leader?rank(getRank(leader)):'—'}<br><br>Нажмите на соту в подробном режиме, чтобы открыть карточку региона.</div></div>
+    </div>`;
+
+  $$('#mapDashboard [data-map-mode]').forEach(btn=>btn.addEventListener('click',()=>{
+    state.mapMode = btn.dataset.mapMode;
+    render();
+  }));
+
+  $$('#mapDashboard .hex-cell').forEach(btn=>btn.addEventListener('click',()=>{
+    state.region = btn.dataset.region;
+    setView('region');
+  }));
+
+  const applyMapScale = ()=>{
+    const scroll = $('#mapDashboard .hex-map-scroll.fit-mode');
+    const stage = $('#mapDashboard .hex-map-stage');
+    const map = $('#mapDashboard .hex-map');
+    if(!scroll || !stage || !map) return;
+    const available = Math.max(260, scroll.clientWidth - 2);
+    const scale = Math.min(1, available / naturalWidth);
+    map.style.transform = `scale(${scale})`;
+    map.style.transformOrigin = '0 0';
+    stage.style.width = `${naturalWidth * scale}px`;
+    stage.style.height = `${naturalHeight * scale}px`;
+  };
+  if(state.mapMode==='fit') requestAnimationFrame(applyMapScale);
 }
 
 
@@ -269,5 +333,5 @@ $$('.nav-btn').forEach(b=>b.addEventListener('click',()=>setView(b.dataset.view)
 $('#searchInput').addEventListener('input',render);
 $('#resetFilters').addEventListener('click',()=>{$('#metricFilter').value='to'; state.metric='to'; $('#foFilter').value='all';$('#scaleFilter').value='all';$('#searchInput').value='';render(); updateMeta();});
 $('#fileInput').addEventListener('change',async e=>{const file=e.target.files?.[0];if(!file)return;$('#parseStatus').textContent='Чтение…';try{const buf=await file.arrayBuffer();const wb=XLSX.read(buf,{type:'array'});const parsed=fromWorkbook(wb,file.name);state.data=parsed.data;state.meta=parsed.meta;state.region=null;populateFilters();updateMeta();$('#fileName').textContent=file.name;$('#parseStatus').textContent='Готово';render();}catch(err){console.error(err);$('#parseStatus').textContent='Ошибка';alert('Не удалось обработать Excel: '+err.message);}});
-window.addEventListener('resize',()=>state.charts.forEach(c=>c.resize()));
+window.addEventListener('resize',()=>{state.charts.forEach(c=>c.resize()); if(state.view==='map'&&state.mapMode==='fit') render();});
 populateFilters();updateMeta();render();
