@@ -16,6 +16,7 @@ const DIRECTIONS = [
   'Обеспечение деятельности ППК «Роскадастр»'
 ];
 const SHORT = ['Качество ЕГРН','Эл.услуги','Контроль','Цифра','Кадры','ФЭД','Дисциплина','Антикор','Открытость','Развитие','Право','ППК'];
+const HEX_LAYOUT = {"Калининградская область": [0, 3, "КЛГ"], "Мурманская область": [4, 0, "МУР"], "Архангельская область и Ненецкий АО": [7, 1, "АРХ"], "Республика Карелия": [4, 1, "КАР"], "Санкт-Петербург": [3, 2, "СПБ"], "Ленинградская область": [4, 2, "ЛЕН"], "Псковская область": [2, 3, "ПСК"], "Новгородская область": [4, 3, "НВГ"], "Вологодская область": [6, 2, "ВЛГ"], "Республика Коми": [8, 2, "КОМ"], "Тверская область": [5, 4, "ТВР"], "Смоленская область": [3, 4, "СМЛ"], "Брянская область": [2, 5, "БРЯ"], "Калужская область": [4, 5, "КЛЖ"], "Москва": [6, 5, "МСК"], "Московская область": [5, 5, "МО"], "Ярославская область": [6, 4, "ЯРС"], "Костромская область": [7, 4, "КСТ"], "Ивановская область": [7, 5, "ИВН"], "Владимирская область": [8, 5, "ВЛД"], "Орловская область": [4, 6, "ОРЛ"], "Тульская область": [5, 6, "ТУЛ"], "Рязанская область": [7, 6, "РЯЗ"], "Белгородская область": [2, 7, "БЕЛ"], "Курская область": [3, 7, "КУР"], "Липецкая область": [5, 7, "ЛПЦ"], "Тамбовская область": [7, 7, "ТАМ"], "Воронежская область": [4, 8, "ВРН"], "Республика Крым": [1, 10, "КРМ"], "Севастополь": [2, 10, "СЕВ"], "Ростовская область": [4, 10, "РСТ"], "Республика Адыгея": [3, 11, "АДГ"], "Краснодарский край": [4, 11, "КРД"], "Карачаево-Черкесская Республика": [5, 11, "КЧР"], "Ставропольский край": [6, 11, "СТВ"], "Кабардино-Балкарская Республика": [5, 12, "КБР"], "Республика Северная Осетия": [6, 12, "РСО"], "Республика Ингушетия": [7, 12, "ИНГ"], "Чеченская Республика": [8, 12, "ЧЕЧ"], "Республика Дагестан": [9, 12, "ДАГ"], "Республика Калмыкия": [7, 10, "КЛМ"], "Астраханская область": [8, 9, "АСТ"], "Волгоградская область": [7, 9, "ВГД"], "Республика Мордовия": [9, 6, "МОР"], "Нижегородская область": [10, 5, "НН"], "Чувашская Республика": [10, 6, "ЧУВ"], "Республика Марий Эл": [11, 5, "МАР"], "Кировская область": [10, 4, "КИР"], "Пензенская область": [10, 7, "ПНЗ"], "Ульяновская область": [11, 7, "УЛЬ"], "Республика Татарстан": [12, 6, "ТАТ"], "Самарская область": [13, 7, "САМ"], "Саратовская область": [14, 8, "САР"], "Оренбургская область": [14, 7, "ОРБ"], "Удмуртская Республика": [12, 5, "УДМ"], "Пермский край": [12, 4, "ПЕР"], "Республика Башкортостан": [13, 5, "БШК"], "Курганская область": [14, 4, "КРГ"], "Челябинская область": [14, 5, "ЧЛБ"], "Свердловская область": [13, 4, "СВР"], "Тюменская область": [15, 3, "ТЮМ"], "Ханты-Мансийский АО": [15, 2, "ХМ"], "Ямало-Ненецкий АО": [15, 1, "ЯН"], "Омская область": [16, 4, "ОМС"], "Томская область": [17, 3, "ТОМ"], "Новосибирская область": [17, 4, "НСК"], "Кемеровская область": [18, 4, "КЕМ"], "Алтайский край": [18, 5, "АЛК"], "Республика Алтай": [17, 6, "АЛТ"], "Республика Хакасия": [19, 5, "ХАК"], "Красноярский край": [18, 2, "КРЯ"], "Республика Тыва": [19, 6, "ТЫВ"], "Иркутская область": [20, 4, "ИРК"], "Республика Бурятия": [21, 5, "БУР"], "Забайкальский край": [22, 5, "ЗАБ"], "Республика Саха (Якутия)": [22, 2, "ЯКТ"], "Амурская область": [23, 5, "АМР"], "Еврейская А.обл.": [24, 5, "ЕАО"], "Хабаровский край": [24, 4, "ХБР"], "Приморский край": [24, 6, "ПРМ"], "Сахалинская область": [25, 7, "СХЛ"], "Камчатский край": [26, 3, "КМЧ"], "Магаданская область и Чукотский АО": [26, 1, "МГД"]};
 const state = { data: Array.isArray(window.DEFAULT_DATA) ? window.DEFAULT_DATA : [], meta: window.DEFAULT_META || {}, view:'overview', direction:0, region:null, metric:'to', charts:[] };
 
 const $ = s => document.querySelector(s);
@@ -53,7 +54,7 @@ function updateMeta(){
   $('#rankedCount').textContent=state.data.filter(x=>num(getRank(x))).length;
 }
 function setView(view){state.view=view;$$('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));$$('.view').forEach(v=>v.classList.add('hidden'));$('#'+view+'View').classList.remove('hidden');render();}
-function render(){destroyCharts();const data=filteredData(); if(state.view==='overview')renderOverview(data); if(state.view==='ranking')renderRanking(data); if(state.view==='directions')renderDirections(data); if(state.view==='region')renderRegion(data); if(state.view==='diagnostics')renderDiagnostics(data); setTimeout(()=>state.charts.forEach(c=>c.resize()),0);}
+function render(){destroyCharts();const data=filteredData(); if(state.view==='overview')renderOverview(data); if(state.view==='map')renderMap(data); if(state.view==='analytics')renderAnalytics(data); if(state.view==='ranking')renderRanking(data); if(state.view==='directions')renderDirections(data); if(state.view==='region')renderRegion(data); if(state.view==='diagnostics')renderDiagnostics(data); setTimeout(()=>state.charts.forEach(c=>c.resize()),0);}
 
 function topBottom(data){
   const ranked = data.filter(x=>num(getRank(x))).sort((a,b)=>getRank(a)-getRank(b));
@@ -94,6 +95,111 @@ function renderOverview(data){
   chart($('#bottomChart'),{...chartBase(),grid:{left:48,right:18,top:24,bottom:24,containLabel:true},xAxis:{type:'value',min:0,max:100,axisLabel:{formatter:'{value}%'}},yAxis:{type:'category',data:cats,axisLabel:{width:180,overflow:'truncate'}},series:[{type:'bar',data:vals,barMaxWidth:16,itemStyle:{borderRadius:[0,5,5,0]}}]});
 }
 function moversRows(data){return movers(data).slice(0,10).map(x=>`<tr><td>${esc(x.n)}</td><td>${rank(getPrevRank(x))}</td><td><span class="rank-pill">${rank(getRank(x))}</span></td><td>${deltaHtml(getRank(x),getPrevRank(x))}</td></tr>`).join('')||'<tr><td colspan="4">Нет данных</td></tr>';}
+
+
+function renderMap(data){
+  const root = $('#mapDashboard');
+  const selected = new Set(data.map(x=>x.n));
+  const all = state.data.filter(x=>HEX_LAYOUT[x.n]);
+  const maxCol = Math.max(...Object.values(HEX_LAYOUT).map(v=>v[0]));
+  const maxRow = Math.max(...Object.values(HEX_LAYOUT).map(v=>v[1]));
+  const cellW = 84, stepX = 73, stepY = 63, offsetX = 36;
+  const width = maxCol * stepX + cellW + offsetX + 24;
+  const height = maxRow * stepY + 86;
+  const high = data.filter(x=>getScale(x)==='Высокая').length;
+  const mid = data.filter(x=>getScale(x)==='Средняя').length;
+  const low = data.filter(x=>getScale(x)==='Низкая').length;
+  const leader = [...data].filter(x=>num(getRank(x))).sort((a,b)=>getRank(a)-getRank(b))[0];
+  root.innerHTML = `<div class="section-head"><div><h2>Карта России сотами</h2><p>Условная сотовая картограмма регионов. Цвет показывает уровень оценки в режиме <strong>${metricLabel()}</strong>. Нажмите на соту, чтобы открыть карточку региона.</p></div><div class="legend-inline"><span class="legend-item"><i class="legend-swatch high"></i>Высокая</span><span class="legend-item"><i class="legend-swatch mid"></i>Средняя</span><span class="legend-item"><i class="legend-swatch low"></i>Низкая</span><span class="legend-item"><i class="legend-swatch dim"></i>Вне текущего фильтра</span></div></div>
+  <div class="panel"><div class="panel-title"><div><h3>Сотовая карта по всем территориальным органам</h3><p>Расположение условное, адаптировано для обзорной аналитики и сравнения регионов.</p></div><div class="note">Сейчас в фильтре: <strong>${data.length}</strong> регионов</div></div><div class="hex-map-scroll"><div class="hex-map" style="width:${width}px;height:${height}px">${all.map(x=>{ const [c,r,label]=HEX_LAYOUT[x.n]; const cls = getScale(x)==='Высокая' ? 'high' : getScale(x)==='Средняя' ? 'mid' : 'low'; const dim = selected.has(x.n) ? '' : ' dim'; const left = c*stepX + (r%2?offsetX:0); const top = r*stepY; return `<button type="button" class="hex-cell ${cls}${dim}" data-region="${esc(x.n)}" style="left:${left}px;top:${top}px" title="${esc(x.n)} · ${pct(getVal(x))} · место ${rank(getRank(x))}"><span class="hex-cell-label">${esc(label)}</span><span class="hex-cell-value">${pct(getVal(x))}</span><span class="hex-cell-rank">место ${rank(getRank(x))}</span></button>`;}).join('')}</div></div></div>
+  <div class="grid-2 equal"><div class="panel"><div class="panel-title"><div><h3>Сводка по текущему фильтру</h3><p>${metricLabel()}</p></div></div><div class="map-side-grid"><div class="map-mini-card"><span>Высокая оценка</span><strong>${high}</strong></div><div class="map-mini-card"><span>Средняя оценка</span><strong>${mid}</strong></div><div class="map-mini-card"><span>Низкая оценка</span><strong>${low}</strong></div></div></div><div class="panel"><div class="panel-title"><div><h3>Лидер на карте</h3><p>Лучший результат по текущему режиму</p></div></div><div class="note"><strong>${leader?esc(leader.n):'Нет данных'}</strong><br>Федеральный округ: ${leader?esc(leader.fo):'—'}<br>Значение: ${leader?pct(getVal(leader)):'—'}<br>Место в рейтинге: ${leader?rank(getRank(leader)):'—'}<br><br>Подсказка: используйте общие фильтры сверху — карта сразу перекрасится и покажет только нужную выборку без потери общего контура России.</div></div></div>`;
+  $$('#mapDashboard .hex-cell').forEach(btn=>btn.addEventListener('click',()=>{ state.region = btn.dataset.region; setView('region'); }));
+}
+
+
+function renderAnalytics(data){
+  const root=$('#analyticsDashboard');
+  const usable=data.filter(x=>num(x.v));
+  const avgTO=mean(usable.map(x=>x.v));
+  const avgPPK=mean(usable.map(x=>x.ppv));
+  const avgCombined=mean(usable.map(x=>x.cv));
+  const ranked=usable.filter(x=>num(x.r)&&num(x.pr));
+  const improved=ranked.filter(x=>delta(x.r,x.pr)>0).length;
+  const worsened=ranked.filter(x=>delta(x.r,x.pr)<0).length;
+  const stable=ranked.filter(x=>delta(x.r,x.pr)===0).length;
+  const ppkImpact=usable.filter(x=>num(x.cv)&&num(x.v)).map(x=>({...x,impact:x.cv-x.v})).sort((a,b)=>b.impact-a.impact);
+  const bestImpact=ppkImpact[0], worstImpact=ppkImpact[ppkImpact.length-1];
+  const foStats=[...new Set(usable.map(x=>x.fo).filter(Boolean))].map(fo=>{
+    const rows=usable.filter(x=>x.fo===fo);
+    return {fo,to:mean(rows.map(x=>x.v)),ppk:mean(rows.map(x=>x.ppv)),combined:mean(rows.map(x=>x.cv)),n:rows.length};
+  }).sort((a,b)=>(b.combined??0)-(a.combined??0));
+  const dirStats=DIRECTIONS.map((name,i)=>{
+    const vals=usable.map(x=>x.d?.[i]?.[1]).filter(num);
+    const below90=usable.filter(x=>num(x.d?.[i]?.[1])&&x.d[i][1]<.90).length;
+    return {name,short:SHORT[i],avg:mean(vals),below90,n:vals.length};
+  }).filter(x=>num(x.avg)).sort((a,b)=>a.avg-b.avg);
+  const weakestDir=dirStats[0], strongestDir=dirStats[dirStats.length-1];
+  const attention=usable.map(x=>{
+    const d=delta(x.r,x.pr);
+    const weakDirs=(x.d||[]).filter(z=>num(z?.[1])&&z[1]<.90).length;
+    let scoreRisk=0;
+    if(num(x.v)) scoreRisk+=(1-x.v)*100;
+    if(num(d)&&d<0) scoreRisk+=Math.abs(d)*.6;
+    scoreRisk+=weakDirs*1.5;
+    return {...x,d,weakDirs,scoreRisk};
+  }).sort((a,b)=>b.scoreRisk-a.scoreRisk).slice(0,12);
+  const moversAll=[...ranked].map(x=>({...x,d:delta(x.r,x.pr)}));
+  const gains=moversAll.filter(x=>x.d>0).sort((a,b)=>b.d-a.d).slice(0,8);
+  const losses=moversAll.filter(x=>x.d<0).sort((a,b)=>a.d-b.d).slice(0,8);
+  const bestFO=foStats[0], worstFO=foStats[foStats.length-1];
+  const changedClass=usable.filter(x=>x.sc && x.cs && x.sc!==x.cs).length;
+
+  root.innerHTML=`
+    <div class="section-head"><div><h2>Управленческая аналитика</h2><p>Автоматические выводы по рейтингу, ППК «Роскадастр», федеральным округам и направлениям деятельности.</p></div><div class="note">Фильтры сверху применяются ко всей аналитике. Динамика рейтинга относится к сравнению с IV кварталом 2025 года.</div></div>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="label">Средняя оценка ТО</div><div class="value">${pct(avgTO)}</div><div class="sub">по текущей выборке</div></div>
+      <div class="kpi-card"><div class="label">С учетом ППК</div><div class="value">${pct(avgCombined)}</div><div class="sub">ППК отдельно: ${pct(avgPPK)}</div></div>
+      <div class="kpi-card accent-high"><div class="label">Улучшили место</div><div class="value">${improved}</div><div class="sub">из ${ranked.length} сопоставимых ТО</div></div>
+      <div class="kpi-card accent-low"><div class="label">Снизили место</div><div class="value">${worsened}</div><div class="sub">без изменений: ${stable}</div></div>
+      <div class="kpi-card"><div class="label">Смена уровня из-за ППК</div><div class="value">${changedClass}</div><div class="sub">ТО изменили категорию оценки</div></div>
+    </div>
+
+    <div class="grid-2 equal">
+      <div class="panel"><div class="panel-title"><div><h3>Ключевые выводы</h3><p>Автоматически сформировано по текущей выборке</p></div></div>
+        <div class="insight-list">
+          <div class="insight-item positive"><strong>Лучший федеральный округ:</strong> ${bestFO?esc(bestFO.fo):'—'} — ${bestFO?pct(bestFO.combined):'—'} по комплексной оценке.</div>
+          <div class="insight-item warning"><strong>Округ с минимальным средним:</strong> ${worstFO?esc(worstFO.fo):'—'} — ${worstFO?pct(worstFO.combined):'—'}.</div>
+          <div class="insight-item negative"><strong>Самое слабое направление:</strong> ${weakestDir?esc(weakestDir.name):'—'} — среднее ${weakestDir?pct(weakestDir.avg):'—'}, ниже 90% у ${weakestDir?weakestDir.below90:0} ТО.</div>
+          <div class="insight-item positive"><strong>Самое сильное направление:</strong> ${strongestDir?esc(strongestDir.name):'—'} — среднее ${strongestDir?pct(strongestDir.avg):'—'}.</div>
+          <div class="insight-item"><strong>Наибольшее влияние ППК вверх:</strong> ${bestImpact?esc(bestImpact.n):'—'} — ${(bestImpact&&num(bestImpact.impact)?(bestImpact.impact*100).toFixed(1).replace('.',','):'—')} п.п.; <strong>наибольшее вниз:</strong> ${worstImpact?esc(worstImpact.n):'—'} — ${(worstImpact&&num(worstImpact.impact)?(worstImpact.impact*100).toFixed(1).replace('.',','):'—')} п.п.</div>
+        </div>
+      </div>
+      <div class="panel"><div class="panel-title"><div><h3>ТО vs ППК «Роскадастр»</h3><p>Каждая точка — территориальный орган; диагональ показывает равные значения</p></div></div><div id="analyticsScatter" class="chart"></div><div class="quadrant-note">Чем выше и правее точка, тем выше оба компонента. Точки заметно ниже диагонали указывают на более слабый результат ППК относительно ТО.</div></div>
+    </div>
+
+    <div class="grid-2 equal">
+      <div class="panel"><div class="panel-title"><div><h3>Федеральные округа</h3><p>Средние: ТО / ППК / комплексная оценка</p></div></div><div id="analyticsFo" class="chart"></div></div>
+      <div class="panel"><div class="panel-title"><div><h3>Направления — зоны внимания</h3><p>Среднее значение и количество ТО ниже 90%</p></div></div><div id="analyticsDirections" class="chart"></div></div>
+    </div>
+
+    <div class="grid-2 equal">
+      <div class="panel"><div class="panel-title"><div><h3>Динамика рейтинга</h3><p>Наибольший рост и снижение позиций</p></div></div><div id="analyticsMoves" class="chart small"></div></div>
+      <div class="panel"><div class="panel-title"><div><h3>Регионы, требующие внимания</h3><p>Низкая оценка, отрицательная динамика и слабые направления</p></div></div><div class="table-wrap"><table class="data-table analytics-table"><thead><tr><th>Регион</th><th>Оценка ТО</th><th>Место</th><th>Динамика</th><th>Напр. &lt;90%</th></tr></thead><tbody>${attention.map(x=>`<tr class="clickable-row" data-region="${esc(x.n)}"><td><strong>${esc(x.n)}</strong></td><td>${pct(x.v)}<span class="mini-bar"><span style="width:${Math.max(0,Math.min(100,(x.v||0)*100))}%"></span></span></td><td>${rank(x.r)}</td><td>${deltaHtml(x.r,x.pr)}</td><td>${x.weakDirs}</td></tr>`).join('')}</tbody></table></div></div>
+    </div>`;
+
+  $$('#analyticsDashboard .clickable-row').forEach(tr=>tr.addEventListener('click',()=>{state.region=tr.dataset.region;setView('region');}));
+
+  const scatter=usable.filter(x=>num(x.v)&&num(x.ppv)).map(x=>[+(x.v*100).toFixed(1),+(x.ppv*100).toFixed(1),x.n,x.fo,+(x.cv*100).toFixed(1)]);
+  chart($('#analyticsScatter'),{tooltip:{trigger:'item',formatter:p=>`${esc(p.data[2])}<br>ТО: ${p.data[0]}%<br>ППК: ${p.data[1]}%<br>Комплексная: ${p.data[4]}%`},grid:{left:48,right:18,top:24,bottom:48,containLabel:true},xAxis:{name:'ТО, %',type:'value',min:Math.max(0,Math.floor(Math.min(...scatter.map(x=>x[0]),50)/5)*5),max:100},yAxis:{name:'ППК, %',type:'value',min:Math.max(0,Math.floor(Math.min(...scatter.map(x=>x[1]),35)/5)*5),max:100},series:[{type:'scatter',data:scatter,symbolSize:v=>8+Math.max(0,(v[4]-70)/4),itemStyle:{opacity:.72},markLine:{silent:true,symbol:'none',lineStyle:{type:'dashed'},data:[[{coord:[50,50]},{coord:[100,100]}]]}}]});
+
+  chart($('#analyticsFo'),{tooltip:{trigger:'axis'},legend:{bottom:0},grid:{left:40,right:16,top:24,bottom:70,containLabel:true},xAxis:{type:'category',data:foStats.map(x=>x.fo)},yAxis:{type:'value',min:0,max:100,axisLabel:{formatter:'{value}%'}},series:[{name:'ТО',type:'bar',data:foStats.map(x=>num(x.to)?+(x.to*100).toFixed(1):null)},{name:'ППК',type:'bar',data:foStats.map(x=>num(x.ppk)?+(x.ppk*100).toFixed(1):null)},{name:'Комплексная',type:'line',smooth:true,data:foStats.map(x=>num(x.combined)?+(x.combined*100).toFixed(1):null)}]});
+
+  const dirView=dirStats.slice(0,10).reverse();
+  chart($('#analyticsDirections'),{tooltip:{trigger:'axis'},grid:{left:48,right:42,top:22,bottom:30,containLabel:true},xAxis:[{type:'value',min:0,max:100,axisLabel:{formatter:'{value}%'}},{type:'value',min:0,max:Math.max(5,...dirView.map(x=>x.below90)),position:'top'}],yAxis:{type:'category',data:dirView.map(x=>x.short)},series:[{name:'Среднее',type:'bar',data:dirView.map(x=>+(x.avg*100).toFixed(1)),barMaxWidth:18,itemStyle:{borderRadius:[0,5,5,0]}},{name:'ТО ниже 90%',type:'line',xAxisIndex:1,data:dirView.map(x=>x.below90),symbolSize:7}]});
+
+  const moveRows=[...losses.slice().reverse(),...gains];
+  chart($('#analyticsMoves'),{tooltip:{trigger:'axis',axisPointer:{type:'shadow'}},grid:{left:48,right:18,top:20,bottom:26,containLabel:true},xAxis:{type:'value',name:'позиций'},yAxis:{type:'category',data:moveRows.map(x=>x.n),axisLabel:{width:150,overflow:'truncate'}},series:[{type:'bar',data:moveRows.map(x=>x.d),barMaxWidth:16,itemStyle:{borderRadius:[4,4,4,4]}}]});
+}
 
 function renderRanking(data){
   const avg = mean(data.map(getVal));
