@@ -104,9 +104,13 @@ function renderMap(data){
   const maxCol = Math.max(...Object.values(HEX_LAYOUT).map(v=>v[0]));
   const maxRow = Math.max(...Object.values(HEX_LAYOUT).map(v=>v[1]));
 
-  // Базовая геометрия карты. В режиме «Вся Россия» она масштабируется целиком,
-  // в режиме «Подробно» отображается в натуральном размере с прокруткой.
-  const cellW = 84, cellH = 74, stepX = 73, stepY = 63, offsetX = 36;
+  const mobile = window.matchMedia('(max-width: 700px)').matches;
+  const fitMode = state.mapMode === 'fit';
+  const geom = fitMode
+    ? { cellW: 74, cellH: 64, stepX: 56, stepY: 42, offsetX: 28 }
+    : { cellW: 84, cellH: 74, stepX: 63, stepY: 48, offsetX: 32 };
+
+  const { cellW, cellH, stepX, stepY, offsetX } = geom;
   const naturalWidth = maxCol * stepX + cellW + offsetX + 24;
   const naturalHeight = maxRow * stepY + cellH + 24;
 
@@ -114,8 +118,7 @@ function renderMap(data){
   const mid = data.filter(x=>getScale(x)==='Средняя').length;
   const low = data.filter(x=>getScale(x)==='Низкая').length;
   const leader = [...data].filter(x=>num(getRank(x))).sort((a,b)=>getRank(a)-getRank(b))[0];
-  const mobile = window.matchMedia('(max-width: 700px)').matches;
-  const compactText = state.mapMode==='fit' && mobile;
+  const compactText = fitMode && mobile;
 
   const cells = all.map(x=>{
     const [c,r,label]=HEX_LAYOUT[x.n];
@@ -123,7 +126,7 @@ function renderMap(data){
     const dim = selected.has(x.n) ? '' : ' dim';
     const left = c*stepX + (r%2?offsetX:0);
     const top = r*stepY;
-    return `<button type="button" class="hex-cell ${cls}${dim}" data-region="${esc(x.n)}" style="left:${left}px;top:${top}px" aria-label="${esc(x.n)}, ${pct(getVal(x))}, место ${rank(getRank(x))}" title="${esc(x.n)} · ${pct(getVal(x))} · место ${rank(getRank(x))}">
+    return `<button type="button" class="hex-cell ${cls}${dim}" data-region="${esc(x.n)}" style="left:${left}px;top:${top}px;width:${cellW}px;height:${cellH}px" aria-label="${esc(x.n)}, ${pct(getVal(x))}, место ${rank(getRank(x))}" title="${esc(x.n)} · ${pct(getVal(x))} · место ${rank(getRank(x))}">
       <span class="hex-cell-label">${esc(label)}</span>
       <span class="hex-cell-value">${pct(getVal(x))}</span>
       <span class="hex-cell-rank">место ${rank(getRank(x))}</span>
@@ -132,23 +135,23 @@ function renderMap(data){
 
   root.innerHTML = `
     <div class="section-head map-section-head">
-      <div><h2>Карта России сотами</h2><p>Условная сотовая картограмма регионов. Цвет показывает уровень оценки в режиме <strong>${metricLabel()}</strong>.</p></div>
+      <div><h2>Карта России сотами</h2><p>Плотная сотовая картограмма регионов без лишних пробелов. Цвет показывает уровень оценки в режиме <strong>${metricLabel()}</strong>.</p></div>
       <div class="map-controls">
         <div class="segmented" role="group" aria-label="Режим карты">
-          <button type="button" class="segment-btn ${state.mapMode==='fit'?'active':''}" data-map-mode="fit">Вся Россия</button>
+          <button type="button" class="segment-btn ${fitMode?'active':''}" data-map-mode="fit">Вся Россия</button>
           <button type="button" class="segment-btn ${state.mapMode==='detail'?'active':''}" data-map-mode="detail">Подробно</button>
         </div>
         <div class="legend-inline"><span class="legend-item"><i class="legend-swatch high"></i>Высокая</span><span class="legend-item"><i class="legend-swatch mid"></i>Средняя</span><span class="legend-item"><i class="legend-swatch low"></i>Низкая</span><span class="legend-item"><i class="legend-swatch dim"></i>Вне фильтра</span></div>
       </div>
     </div>
     <div class="panel map-panel">
-      <div class="panel-title map-panel-title"><div><h3>${state.mapMode==='fit'?'Вся Россия на одном экране':'Подробная сотовая карта'}</h3><p>${state.mapMode==='fit'?'Обзорная карта автоматически подстраивается под ширину экрана.':'Крупные соты с процентом и местом. Карту можно прокручивать по горизонтали.'}</p></div><div class="note">В фильтре: <strong>${data.length}</strong> регионов</div></div>
-      <div class="hex-map-scroll ${state.mapMode==='detail'?'detail-mode':'fit-mode'}">
+      <div class="panel-title map-panel-title"><div><h3>${fitMode?'Вся Россия на одном экране':'Подробная плотная карта'}</h3><p>${fitMode?'Карта уплотнена: соты соприкасаются и общий контур читается лучше.':'Крупные плотные соты с процентом и местом. Карту можно прокручивать по горизонтали.'}</p></div><div class="note">В фильтре: <strong>${data.length}</strong> регионов</div></div>
+      <div class="hex-map-scroll ${fitMode?'fit-mode':'detail-mode'} dense-map">
         <div class="hex-map-stage" style="--map-natural-width:${naturalWidth}px;--map-natural-height:${naturalHeight}px">
           <div class="hex-map ${compactText?'compact-text':''}" style="width:${naturalWidth}px;height:${naturalHeight}px">${cells}</div>
         </div>
       </div>
-      ${state.mapMode==='fit' && mobile ? '<div class="map-mobile-hint">На телефоне в режиме «Вся Россия» подписи сокращены, чтобы видеть весь контур. Для чтения процентов и мест переключитесь на «Подробно».</div>' : ''}
+      ${fitMode && mobile ? '<div class="map-mobile-hint">В режиме «Вся Россия» карта автоматически ужимается так, чтобы был виден весь контур страны. Для чтения процентов и мест переключитесь на «Подробно».</div>' : ''}
     </div>
     <div class="grid-2 equal">
       <div class="panel"><div class="panel-title"><div><h3>Сводка по текущему фильтру</h3><p>${metricLabel()}</p></div></div><div class="map-side-grid"><div class="map-mini-card"><span>Высокая оценка</span><strong>${high}</strong></div><div class="map-mini-card"><span>Средняя оценка</span><strong>${mid}</strong></div><div class="map-mini-card"><span>Низкая оценка</span><strong>${low}</strong></div></div></div>
@@ -177,9 +180,8 @@ function renderMap(data){
     stage.style.width = `${naturalWidth * scale}px`;
     stage.style.height = `${naturalHeight * scale}px`;
   };
-  if(state.mapMode==='fit') requestAnimationFrame(applyMapScale);
+  if(fitMode) requestAnimationFrame(applyMapScale);
 }
-
 
 function renderAnalytics(data){
   const root=$('#analyticsDashboard');
