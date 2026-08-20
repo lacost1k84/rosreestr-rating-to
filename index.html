@@ -5,25 +5,25 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#007CFF">
   <title>Комплексная оценка ТО Росреестра</title>
-  <link rel="stylesheet" href="./styles.css?v=15">
+  <link rel="stylesheet" href="./styles.css?v=16">
 </head>
 <body>
 <div class="app">
   <aside class="sidebar">
     <div class="brand"><div class="brand-mark" aria-hidden="true">РР</div><div><div class="brand-title">Росреестр</div><div class="brand-subtitle">Комплексная оценка территориальных органов</div></div></div>
     <nav class="nav">
-      <button class="nav-btn active" data-view="overview"><span class="nav-dot"></span>Обзор</button>
-      <button class="nav-btn" data-view="map"><span class="nav-dot"></span>Карта России</button>
-      <button class="nav-btn" data-view="analytics"><span class="nav-dot"></span>Аналитика</button>
-      <button class="nav-btn" data-view="risk"><span class="nav-dot"></span>Зона риска</button>
-      <button id="compareNav" class="nav-btn hidden" data-view="comparison"><span class="nav-dot"></span>Сравнение периодов</button>
-      <button class="nav-btn" data-view="ranking"><span class="nav-dot"></span>Рейтинг ТО</button>
-      <button class="nav-btn" data-view="directions"><span class="nav-dot"></span>Направления</button>
+      <button class="nav-btn active" data-view="overview"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v4h-6zM14 12h6v8h-6zM4 14h6v6H4z"/></svg></span><span>Обзор</span></button>
+      <button class="nav-btn" data-view="map"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6.5 8 4l8 2.5L21 4v13.5L16 20l-8-2.5L3 20zM8 4v13.5M16 6.5V20"/></svg></span><span>Карта России</span></button>
+      <button class="nav-btn" data-view="analytics"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V9M10 19V5M16 19v-7M22 19V3M2 19h21"/></svg></span><span>Аналитика</span></button>
+      <button class="nav-btn" data-view="risk"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3.5 20h17zM12 9v5M12 17h.01"/></svg></span><span>Зона риска</span></button>
+      <button id="compareNav" class="nav-btn hidden" data-view="comparison"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7h12l-3-3M17 17H5l3 3M19 7l-3 3M5 17l3-3"/></svg></span><span>Сравнение периодов</span></button>
+      <button class="nav-btn" data-view="ranking"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20V10h4v10M10 20V4h4v16M15 20v-7h4v7M3 20h18"/></svg></span><span>Рейтинг ТО</span></button>
+      <button class="nav-btn" data-view="directions"><span class="nav-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h10M4 18h7M17 10l3 2-3 2"/></svg></span><span>Направления</span></button>
     </nav>
     <div class="sidebar-bottom"><button id="serviceBtn" class="service-link" type="button">⚙ Сервис и диагностика</button><div class="side-note"><strong>Локальная обработка</strong><span>Excel считывается только в браузере и не загружается в GitHub.</span></div></div>
   </aside>
   <main class="main">
-    <header class="topbar"><div><div class="eyebrow">КОМПЛЕКСНАЯ ОЦЕНКА ТЕРРИТОРИАЛЬНЫХ ОРГАНОВ</div><h1>Аналитический дашборд Росреестра</h1><p id="periodText">I квартал 2026 года</p></div><div class="topbar-actions"><label class="upload-btn secondary-upload" for="fileInput">＋ Обновить данные</label><input id="fileInput" type="file" accept=".xlsx,.xls,.xlsm" hidden></div></header>
+    <header class="topbar"><div class="brand-pattern" aria-hidden="true"><span class="binary-pattern">01001101011001010100110101100101</span><span class="contour contour-a"></span><span class="contour contour-b"></span><span class="contour contour-c"></span></div><div class="topbar-copy"><div class="eyebrow">РОСРЕЕСТР · КОМПЛЕКСНАЯ ОЦЕНКА ТЕРРИТОРИАЛЬНЫХ ОРГАНОВ</div><h1>Аналитический дашборд Росреестра</h1><p id="periodText">I квартал 2026 года</p></div><div class="topbar-actions"><button id="presentationToggle" class="presentation-btn" type="button"><span class="presentation-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H4zM8 20h8M12 16v4"/></svg></span><span>Режим доклада</span></button><label class="upload-btn secondary-upload" for="fileInput">＋ Обновить данные</label><input id="fileInput" type="file" accept=".xlsx,.xls,.xlsm" hidden></div></header>
     <section class="file-strip compact-strip"><div class="file-strip-item"><span>ТО</span><strong id="regionCount">83</strong></div><div class="file-strip-item"><span>В рейтинге</span><strong id="rankedCount">81</strong></div><div class="file-strip-item"><span>Показателей</span><strong id="indicatorCount">46</strong></div><details class="file-strip-item tech-details"><summary>Данные</summary><div class="tech-details-body"><span>Источник</span><strong id="fileName">Встроенные данные исходного Excel</strong><span>Статус</span><strong id="parseStatus">Готово</strong></div></details></section>
     <section class="filters"><div class="filter-group"><label for="metricFilter">Режим оценки</label><select id="metricFilter"><option value="to">Оценка ТО Росреестра</option><option value="combined">С учетом ППК Роскадастр</option></select></div><div class="filter-group"><label for="foFilter">Федеральный округ</label><select id="foFilter"><option value="all">Все округа</option></select></div><div class="filter-group"><label for="scaleFilter">Уровень оценки</label><select id="scaleFilter"><option value="all">Все уровни</option><option>Высокая</option><option>Средняя</option><option>Низкая</option></select></div><div class="filter-group search-group"><label for="searchInput">Регион</label><input id="searchInput" type="search" placeholder="Начните вводить название"></div><button id="resetFilters" class="ghost-btn">Сбросить</button></section>
     <section id="selectedRegionBar" class="selected-region-bar hidden"><div><span class="selected-label">Выбранный ТО</span><strong id="selectedRegionText"></strong></div><div class="selected-actions"><button id="openSelectedRegion" class="mini-action" type="button">Карточка</button><button id="clearSelectedRegion" class="mini-clear" type="button" aria-label="Снять выбор">×</button></div></section>
@@ -42,5 +42,5 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.6.0/dist/echarts.min.js"></script>
-<script src="./app.js?v=15"></script>
+<script src="./app.js?v=16"></script>
 </body></html>
