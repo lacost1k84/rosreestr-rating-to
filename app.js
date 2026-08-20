@@ -168,11 +168,12 @@ function renderAnalytics(data){
       </div>
       <div class="panel"><div class="panel-title"><div><h3>Матрица «результат × динамика»</h3><p>Высокий/низкий результат и изменение места к IV кварталу 2025 года</p></div></div>
         <div class="management-grid">
-          <div class="management-card"><h4>Высокий результат + рост</h4><p>${quadrant.hiUp} ТО. Лидеры, которые продолжают усиливаться.</p></div>
-          <div class="management-card"><h4>Высокий результат + снижение</h4><p>${quadrant.hiDown} ТО. Формально сильные, но требуют внимания к устойчивости результата.</p></div>
-          <div class="management-card"><h4>Низкий результат + рост</h4><p>${quadrant.loUp} ТО. Есть потенциал и положительная динамика.</p></div>
-          <div class="management-card"><h4>Низкий результат + снижение</h4><p>${quadrant.loDown} ТО. Основная зона управленческого внимания.</p></div>
+          <button class="management-card" data-quad="hiUp"><span class="management-count">${quadrant.hiUp}</span><h4>Высокий результат + рост</h4><p>Лидеры, которые продолжают усиливаться. Нажмите, чтобы открыть список ТО.</p></button>
+          <button class="management-card" data-quad="hiDown"><span class="management-count">${quadrant.hiDown}</span><h4>Высокий результат + снижение</h4><p>Формально сильные, но требуют внимания к устойчивости результата. Нажмите, чтобы открыть список ТО.</p></button>
+          <button class="management-card" data-quad="loUp"><span class="management-count">${quadrant.loUp}</span><h4>Низкий результат + рост</h4><p>Есть потенциал и положительная динамика. Нажмите, чтобы открыть список ТО.</p></button>
+          <button class="management-card" data-quad="loDown"><span class="management-count">${quadrant.loDown}</span><h4>Низкий результат + снижение</h4><p>Основная зона управленческого внимания. Нажмите, чтобы открыть список ТО.</p></button>
         </div>
+        <div id="quadrantDetail" class="quadrant-detail note">Нажмите на карточку выше, чтобы посмотреть состав группы.</div>
       </div>
     </div>
 
@@ -182,8 +183,8 @@ function renderAnalytics(data){
     </div>
 
     <div class="grid-2 equal">
-      <div class="panel"><div class="panel-title"><div><h3>Направления — зоны внимания</h3><p>Среднее значение и количество ТО ниже 90%</p></div></div><div id="analyticsDirections" class="chart"></div></div>
-      <div class="panel"><div class="panel-title"><div><h3>Динамика рейтинга</h3><p>Наибольший рост и снижение позиций</p></div></div><div id="analyticsMoves" class="chart small"></div></div>
+      <div class="panel"><div class="panel-title"><div><h3>Направления — зоны внимания</h3><p>Показаны все направления: среднее значение и количество ТО ниже 90%</p></div></div><div id="analyticsDirections" class="chart"></div></div>
+      <div class="panel"><div class="panel-title"><div><h3>Динамика рейтинга</h3><p>Понятный список лидеров роста и снижения: текущее место, место в IV квартале 2025 года и изменение.</p></div></div><div id="analyticsMovesTable"></div></div>
     </div>
 
     <div class="grid-2 equal">
@@ -203,14 +204,39 @@ function renderAnalytics(data){
       <div class="panel"><div class="panel-title"><div><h3>Что тянет результат вниз</h3><p>Для 8 самых проблемных ТО — ключевые направления с наибольшим разрывом от среднего по РФ</p></div></div>
         <div class="kv-list">${attention.slice(0,8).map(x=>`<div class="kv-item"><div><strong>${esc(x.n)}</strong><span> · ${pct(x.v)} · место ${rank(x.r)}</span><div class="risk-tags">${x.topDrag.map(d=>`<span class="risk-tag">${esc(DIRECTIONS[d.i])}: -${((d.gap||0)*100).toFixed(1).replace('.',',')} п.п.</span>`).join('')}</div></div><div>${deltaHtml(x.r,x.pr)}</div></div>`).join('')}</div>
       </div>
-      <div class="panel"><div class="panel-title"><div><h3>Тепловая карта «ТО × направления»</h3><p>Быстрый обзор распределения сильных и слабых мест по всем регионам</p></div></div>
-        <div class="heatmap-wrap"><table class="heatmap-table"><thead><tr><th>Регион</th>${SHORT.map(s=>`<th>${esc(s)}</th>`).join('')}</tr></thead><tbody>
+      <div class="panel"><div class="panel-title"><div><h3>Тепловая карта «ТО × направления»</h3><p>Быстрый обзор распределения сильных и слабых мест по всем регионам. Первый столбец закреплен.</p></div><div class="heatmap-toolbar"><button class="scroll-btn" type="button" data-heatmap-scroll="-360">←</button><button class="scroll-btn" type="button" data-heatmap-scroll="360">→</button></div></div>
+        <div id="heatmapWrap" class="heatmap-wrap"><table class="heatmap-table"><thead><tr><th>Регион</th>${SHORT.map(s=>`<th>${esc(s)}</th>`).join('')}</tr></thead><tbody>
           ${heatRows.map(x=>`<tr class="clickable-row" data-region="${esc(x.n)}"><td><strong>${esc(x.n)}</strong><div class="subtle">${rank(x.r)} место</div></td>${DIRECTIONS.map((_,i)=>{ const v=x.d?.[i]?.[1]; const p=num(v)?Math.round(v*100):null; let bg='#eef2f7'; if(num(v)){ if(v>=0.97) bg='#cfeee2'; else if(v>=0.90) bg='#ffe7bf'; else bg='#ffd8d8'; } return `<td><div class="heatmap-cell" style="background:${bg}">${num(v)?p+'%':'—'}</div></td>`; }).join('')}</tr>`).join('')}
-        </tbody></table></div>
+        </tbody></table></div><div class="legend-mini"><span><i class="legend-dot high"></i>97% и выше</span><span><i class="legend-dot mid"></i>90–96%</span><span><i class="legend-dot low"></i>ниже 90%</span></div><div class="table-note">Для больших матриц используйте кнопки ← → или горизонтальную прокрутку. Это удобнее, чем тянуть таблицу мышью далеко вправо.</div>
       </div>
     </div>`;
 
   $$('#analyticsDashboard .clickable-row').forEach(tr=>tr.addEventListener('click',()=>{state.region=tr.dataset.region;setView('region');}));
+
+  const quadrantRows={
+    hiUp:[...regionAnalytics].filter(x=>x.v>=avgTO && num(x.d) && x.d>0).sort((a,b)=>(a.r??999)-(b.r??999)),
+    hiDown:[...regionAnalytics].filter(x=>x.v>=avgTO && (!num(x.d) || x.d<=0)).sort((a,b)=>(a.r??999)-(b.r??999)),
+    loUp:[...regionAnalytics].filter(x=>x.v<avgTO && num(x.d) && x.d>0).sort((a,b)=>(a.r??999)-(b.r??999)),
+    loDown:[...regionAnalytics].filter(x=>x.v<avgTO && (!num(x.d) || x.d<=0)).sort((a,b)=>(a.r??999)-(b.r??999))
+  };
+  const quadrantMeta={
+    hiUp:{title:'Высокий результат + рост',text:'ТО выше среднего по оценке и с положительной динамикой места.'},
+    hiDown:{title:'Высокий результат + снижение',text:'ТО выше среднего по оценке, но уже теряют позиции или не растут.'},
+    loUp:{title:'Низкий результат + рост',text:'ТО пока ниже среднего, но динамика положительная — есть база для ускорения.'},
+    loDown:{title:'Низкий результат + снижение',text:'ТО ниже среднего и с отрицательной или нулевой динамикой. Это ключевая зона внимания.'}
+  };
+  function renderQuadrantDetail(key){
+    const box=$('#quadrantDetail'); if(!box) return;
+    const rows=quadrantRows[key]||[]; const meta=quadrantMeta[key]||{title:'Группа',text:''};
+    $$('#analyticsDashboard .management-card').forEach(card=>card.classList.toggle('active',card.dataset.quad===key));
+    box.innerHTML=`<div class="quadrant-detail-head"><div><h4>${esc(meta.title)}</h4><p>${esc(meta.text)}</p></div><div class="note"><strong>${rows.length}</strong> ТО в группе</div></div><div class="table-wrap"><table class="data-table analytics-table"><thead><tr><th>Регион</th><th>Место</th><th>IV кв. 2025</th><th>Динамика</th><th>Оценка</th><th>Слабых напр.</th></tr></thead><tbody>${rows.map(x=>`<tr class="clickable-row" data-region="${esc(x.n)}"><td><strong>${esc(x.n)}</strong><div class="subtle">${esc(x.fo)}</div></td><td><span class="quad-rank">${rank(x.r)}</span></td><td>${rank(x.pr)}</td><td>${deltaHtml(x.r,x.pr)}</td><td>${pct(x.v)}</td><td>${x.weakDirsCount}</td></tr>`).join('')||'<tr><td colspan="6">Нет данных</td></tr>'}</tbody></table></div>`;
+    $$('#quadrantDetail .clickable-row').forEach(tr=>tr.addEventListener('click',()=>{state.region=tr.dataset.region;setView('region');}));
+  }
+  $$('#analyticsDashboard .management-card').forEach(card=>card.addEventListener('click',()=>renderQuadrantDetail(card.dataset.quad)));
+  renderQuadrantDetail('loDown');
+
+  const heatmapWrap=$('#heatmapWrap');
+  $$('[data-heatmap-scroll]').forEach(btn=>btn.addEventListener('click',()=>{if(heatmapWrap)heatmapWrap.scrollBy({left:+btn.dataset.heatmapScroll,behavior:'smooth'});}));
 
   const avgTOp=+(avgTO*100).toFixed(1),avgPPKp=+(avgPPK*100).toFixed(1);
   const scatter=usable.filter(x=>num(x.v)&&num(x.ppv)).map(x=>({name:x.n,fo:x.fo,x:+(x.v*100).toFixed(1),y:+(x.ppv*100).toFixed(1),cv:+(x.cv*100).toFixed(1),gap:+((x.ppv-x.v)*100).toFixed(1)}));
@@ -219,14 +245,13 @@ function renderAnalytics(data){
 
   chart($('#analyticsFo'),{tooltip:{trigger:'axis'},legend:{bottom:0},grid:{left:40,right:16,top:24,bottom:70,containLabel:true},xAxis:{type:'category',data:foStats.map(x=>x.fo)},yAxis:{type:'value',min:0,max:100,axisLabel:{formatter:'{value}%'}},series:[{name:'ТО',type:'bar',data:foStats.map(x=>num(x.to)?+(x.to*100).toFixed(1):null),barMaxWidth:18},{name:'ППК',type:'bar',data:foStats.map(x=>num(x.ppk)?+(x.ppk*100).toFixed(1):null),barMaxWidth:18},{name:'Комплексная',type:'bar',data:foStats.map(x=>num(x.combined)?+(x.combined*100).toFixed(1):null),barMaxWidth:18}]});
 
-  const weakDirTop=dirStats.slice(0,10);
-  chart($('#analyticsDirections'),{tooltip:{trigger:'axis'},grid:{left:48,right:18,top:24,bottom:70,containLabel:true},xAxis:{type:'category',data:weakDirTop.map(x=>x.short),axisLabel:{rotate:25}},yAxis:[{type:'value',min:0,max:100,axisLabel:{formatter:'{value}%'}},{type:'value',min:0}],legend:{bottom:0},series:[{name:'Среднее',type:'bar',data:weakDirTop.map(x=>+(x.avg*100).toFixed(1)),barMaxWidth:26},{name:'ТО ниже 90%',type:'line',yAxisIndex:1,data:weakDirTop.map(x=>x.below90),smooth:true}]});
+  const weakDirTop=dirStats;
+  chart($('#analyticsDirections'),{tooltip:{trigger:'axis'},grid:{left:48,right:18,top:24,bottom:82,containLabel:true},xAxis:{type:'category',data:weakDirTop.map(x=>x.short),axisLabel:{interval:0,rotate:28,fontSize:11}},yAxis:[{type:'value',min:0,max:100,axisLabel:{formatter:'{value}%'}},{type:'value',min:0,name:'ТО',nameLocation:'end'}],legend:{bottom:0},series:[{name:'Среднее',type:'bar',data:weakDirTop.map(x=>+(x.avg*100).toFixed(1)),barMaxWidth:22},{name:'ТО ниже 90%',type:'line',yAxisIndex:1,data:weakDirTop.map(x=>x.below90),smooth:true}]});
 
-  const gains=[...ranked].map(x=>({...x,d:delta(x.r,x.pr)})).filter(x=>x.d>0).sort((a,b)=>b.d-a.d).slice(0,6);
-  const losses=[...ranked].map(x=>({...x,d:delta(x.r,x.pr)})).filter(x=>x.d<0).sort((a,b)=>a.d-b.d).slice(0,6);
-  const moveLabels=[...gains.map(x=>'↑ '+x.n),...losses.map(x=>'↓ '+x.n)];
-  const moveVals=[...gains.map(x=>x.d),...losses.map(x=>x.d)];
-  chart($('#analyticsMoves'),{...chartBase(),grid:{left:56,right:18,top:24,bottom:24,containLabel:true},xAxis:{type:'value'},yAxis:{type:'category',data:moveLabels,axisLabel:{width:180,overflow:'truncate'}},series:[{type:'bar',data:moveVals,barMaxWidth:18,itemStyle:{borderRadius:[0,5,5,0]}}]});
+  const gains=[...ranked].map(x=>({...x,d:delta(x.r,x.pr)})).filter(x=>x.d>0).sort((a,b)=>b.d-a.d || (a.r??999)-(b.r??999)).slice(0,8);
+  const losses=[...ranked].map(x=>({...x,d:delta(x.r,x.pr)})).filter(x=>x.d<0).sort((a,b)=>a.d-b.d || (a.r??999)-(b.r??999)).slice(0,8);
+  $('#analyticsMovesTable').innerHTML=`<div class="move-grid"><div class="move-card"><h4>ТОП роста</h4><p>Кто заметнее всего улучшил место в рейтинге.</p><table class="mini-table"><thead><tr><th>Регион</th><th>Было</th><th>Стало</th><th>Δ</th></tr></thead><tbody>${gains.map(x=>`<tr class="clickable-row" data-region="${esc(x.n)}"><td><strong>${esc(x.n)}</strong></td><td>${rank(x.pr)}</td><td>${rank(x.r)}</td><td><span class="delta-up">+${x.d}</span></td></tr>`).join('')||'<tr><td colspan="4">Нет данных</td></tr>'}</tbody></table></div><div class="move-card"><h4>ТОП снижения</h4><p>Где позиции ухудшились сильнее всего.</p><table class="mini-table"><thead><tr><th>Регион</th><th>Было</th><th>Стало</th><th>Δ</th></tr></thead><tbody>${losses.map(x=>`<tr class="clickable-row" data-region="${esc(x.n)}"><td><strong>${esc(x.n)}</strong></td><td>${rank(x.pr)}</td><td>${rank(x.r)}</td><td><span class="delta-down">-${Math.abs(x.d)}</span></td></tr>`).join('')||'<tr><td colspan="4">Нет данных</td></tr>'}</tbody></table></div></div><div class="table-note">Чем больше «+», тем сильнее рост позиции. Чем больше «-», тем сильнее снижение.</div>`;
+  $$('#analyticsMovesTable .clickable-row').forEach(tr=>tr.addEventListener('click',()=>{state.region=tr.dataset.region;setView('region');}));
 }
 function renderRanking(data){const rows=[...data].sort((a,b)=>(getRank(a)??999)-(getRank(b)??999));$('#rankingDashboard').innerHTML=`<div class="section-head"><div><h2>Итоговый рейтинг ТО</h2><p>Нажмите на строку для карточки региона.</p></div></div><div class="panel"><div class="table-wrap"><table class="data-table"><thead><tr><th>Место</th><th>Регион</th><th>ФО</th><th>Оценка</th><th>Достижение</th><th>IV кв. 2025</th><th>Динамика</th><th>С учетом ППК</th></tr></thead><tbody>${rows.map(x=>`<tr class="clickable-row" data-region="${esc(x.n)}"><td><span class="rank-pill">${rank(getRank(x))}</span></td><td><strong>${esc(x.n)}</strong></td><td>${esc(x.fo)}</td><td><span class="badge ${badgeClass(getScale(x))}">${esc(getScale(x))}</span></td><td>${pct(getVal(x))}</td><td>${rank(x.pr)}</td><td>${deltaHtml(getRank(x),x.pr)}</td><td>${rank(x.cr)} · ${pct(x.cv)}</td></tr>`).join('')}</tbody></table></div></div>`;$$('#rankingDashboard .clickable-row').forEach(r=>r.onclick=()=>{state.region=r.dataset.region;setView('region')})}
 function indicatorUnit(m){const n=m.name.toLowerCase();if(n.includes('тыс.га/чел')||n.includes('тыс. га/чел'))return ' тыс. га/чел.';if(n.includes('тыс. га'))return ' тыс. га';if(n.includes(', га')||n.endsWith(' га'))return ' га';if(n.includes('%'))return '%';return ''} function ifmt(v,m){if(!num(v))return fmt(v);return fmt(v)+indicatorUnit(m)}
