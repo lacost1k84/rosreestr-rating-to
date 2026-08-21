@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "updated": "2026-08-21",
+  "periods": [
+    {
+      "period": "I квартал 2026 года",
+      "file": "data/2026-q1.json"
+    }
+  ]
+}
